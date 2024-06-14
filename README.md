@@ -1,6 +1,9 @@
 # About
 
 
-# Running the code
+## Running the code
 
-Run the `generate_shapes_1.ipynb`
+Start the UI code in `generate_shapes_1.ipynb`
+
+
+![alt text](doc/screenshot.png)
