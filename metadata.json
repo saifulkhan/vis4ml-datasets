@@ -1,0 +1,6 @@
+{
+  "output_dir": "./output",
+  "num_images": 10,
+  "image_size": [64, 64],
+  "color": "grey"
+}

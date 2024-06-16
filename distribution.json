@@ -1,0 +1,6 @@
+{
+  "shapes": ["circle", "square", "triangle"],
+  "scales": [0.2, 0.8],
+  "orientation": [0, 360],
+  "position_scales": [0.2, 0.8]
+}

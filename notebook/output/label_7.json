@@ -1,0 +1,13 @@
+{
+  "shapes": [
+    {
+      "type": "circle",
+      "clipped": true
+    },
+    {
+      "type": "circle",
+      "clipped": true
+    }
+  ],
+  "occluded": true
+}

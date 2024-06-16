@@ -1,0 +1,13 @@
+{
+  "shapes": [
+    {
+      "type": "triangle",
+      "clipped": true
+    },
+    {
+      "type": "square",
+      "clipped": false
+    }
+  ],
+  "occluded": true
+}
