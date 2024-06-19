@@ -1,34 +1,42 @@
 import os
 import json
 import numpy as np
-from itertools import combinations
 from PIL import Image
+from tqdm import tqdm
 
-from .utils import read_distribution, read_metadata
+from .utils import draw_fixed_numbers, draw_sample, read_distribution, read_metadata
 from .shape import (
     circle,
     square,
     triangle,
     combine_shapes,
-    check_occlusion,
-    check_clipping,
+    check_overlapping,
+    check_cropping,
 )
 
+shape_functions = {"circle": circle, "square": square, "triangle": triangle}
 
-def generate_images(metadata_file, distribution_file):
-    distribution = read_distribution(distribution_file)
-    metadata = read_metadata(metadata_file)
+
+def generate_images(metadata, distribution):
+    """
+    Args:
+        metadata (_type_): _description_
+        distribution (_type_): _description_
+    """
 
     images = []
     labels = []
 
-    for _ in range(metadata["num_images"]):
-        image, label = generate_image(metadata["image_size"], distribution)
+    pass
+
+    # for _ in range(metadata["num_images"]):
+    for _ in tqdm(range(metadata["num_images"])):
+        image, label = generate_image(metadata, distribution)
         images.append(image)
         labels.append(label)
 
     # save images and metadata
-    output_dir = metadata["output_dir"]
+    output_dir = f"{metadata['output_dir']}/{metadata['output_prefix']}"
     os.makedirs(output_dir, exist_ok=True)
 
     for i, (image, label) in enumerate(zip(images, labels)):
@@ -40,45 +48,80 @@ def generate_images(metadata_file, distribution_file):
         with open(label_filename, "w") as f:
             json.dump(label, f, indent=2)
 
-    return images, labels
 
+def generate_image(metadata, distribution):
+    """
+    Function for shapes and checks are same as provided earlier
+    Args:
+        metadata (_type_): _description_
+        distribution (_type_): _description_
 
-def generate_image(image_size, distribution):
+    Returns:
+        _type_: _description_
+    """
+    image_size = (metadata["image_height"], metadata["image_width"])
 
-    num_shapes = np.random.randint(1, len(distribution["shapes"]) + 1)
+    # Create output directory if not exists
+    # os.makedirs(metadata["output_dir"], exist_ok=True)
+
     images = []
-    label = {"shapes": [], "occluded": False}
+    label = []
 
-    for _ in range(num_shapes):
-        shape = np.random.choice(distribution["shapes"])
-        scale = np.random.uniform(*distribution["scales"])
-        orientation = np.random.uniform(*distribution["orientation"])
-        position_scale = [
-            np.random.uniform(*distribution["position_scales"]),
-            np.random.uniform(*distribution["position_scales"]),
-        ]
+    for _ in range(metadata["num_shapes"]):
+        while True:
+            shape = draw_sample(distribution["shape"], 1)[0]
+            scale = draw_sample(distribution["scale"], 1)[0]
+            pos_x = draw_sample(distribution["pos_x"], 1)[0]
+            pos_y = draw_sample(distribution["pos_y"], 1)[0]
+            rotation = draw_sample(distribution["rotation"], 1)[0]
+            position_scale = (pos_x, pos_y)
 
-        if shape == "circle":
-            image = circle(image_size, scale, orientation, position_scale)
-            label["shapes"].append({"type": "circle", "clipped": check_clipping(image)})
-        elif shape == "square":
-            image = square(image_size, scale, orientation, position_scale)
-            label["shapes"].append({"type": "square", "clipped": check_clipping(image)})
-        elif shape == "triangle":
-            image = triangle(image_size, scale, orientation, position_scale)
-            label["shapes"].append(
-                {"type": "triangle", "clipped": check_clipping(image)}
+            shape_img = shape_functions[shape](
+                image_size, scale, rotation, position_scale
             )
 
-        images.append(image)
+            if metadata["shape_cropping"] != check_cropping(shape_img):
+                continue
+            # debug
+            # print(f"{metadata['shape_cropping']} {check_cropping(shape_img)}")
 
-    # create combinations of two pairs
-    combinations_of_two = list(combinations(images, 2))
-    for pair in combinations_of_two:
-        if check_occlusion(*pair):
-            label["occluded"] = True
+            # TODO this does not work when shape_overlapping: true
+            overlapped = False
+            for existing_shape in images:
+                overlapped = check_overlapping(existing_shape, shape_img)
+                if metadata["shape_overlapping"] != overlapped:
+                    break
+            # print(metadata["shape_overlapping"], occluded)
+
+            # continue the while loop
+            if metadata["shape_overlapping"] != overlapped:
+                continue
+            # print(metadata["shape_overlapping"], overlapped)
+
+            label.append(
+                {
+                    "shape": shape,
+                    "scale": scale.item(),
+                    "pos_x": pos_x.item(),
+                    "pos_y": pos_y.item(),
+                    "rotation": rotation.item(),
+                }
+            )
+            images.append(shape_img)
+
             break
 
-    combined_image = combine_shapes(image_size, images)
+    final_image = combine_shapes(image_size, images)
 
-    return combined_image, label
+    if metadata["color_type"] == "grey":
+        final_image = final_image * np.random.randint(
+            distribution["grey"][0], distribution["grey"][1]
+        )
+
+    # final_image = np.clip(final_image, 0, 255).astype(np.uint8)
+    # final_image = cv2.cvtColor(final_image, cv2.COLOR_GRAY2BGR)
+    # file_name = f"{metadata['output_prefix']}{str(i).zfill(metadata['output_digit'])}.{metadata['output_type']}"
+    # output_path = os.path.join(metadata["output_dir"], file_name)
+    # cv2.imwrite(output_path, final_image)
+
+    return final_image, label

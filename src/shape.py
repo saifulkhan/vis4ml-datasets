@@ -84,12 +84,12 @@ def combine_shapes(image_size, shape_images):
     return canvas
 
 
-def check_occlusion(shape_image1, shape_image2):
+def check_overlapping(shape_image1, shape_image2):
     overlap = np.logical_and(shape_image1 > 0, shape_image2 > 0)
     return np.any(overlap)
 
 
-def check_clipping(shape_image):
+def check_cropping(shape_image):
     height, width = shape_image.shape
 
     # check top, bottom, left, and right boundaries for any non-zero pixels

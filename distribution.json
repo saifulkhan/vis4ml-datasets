@@ -1,6 +1,13 @@
 {
-  "shapes": ["circle", "square", "triangle"],
-  "scales": [0.2, 0.8],
-  "orientation": [0, 360],
-  "position_scales": [0.2, 0.8]
+  "shape": ["circle", "square", "triangle"],
+  "scale": [0.2, 0.8],
+  "nsp_scale": 8,
+  "pos_x": [0.2, 0.8],
+  "nsp_pos_x": 8,
+  "pos_y": [0.2, 0.8],
+  "nsp_pos_y": 4,
+  "rotation": [0, 180],
+  "nsp_rotation": 4,
+  "grey": [50, 255],
+  "nsp_grey": 16
 }

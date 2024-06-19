@@ -1,6 +1,15 @@
 {
-  "output_dir": "../output",
   "num_images": 10,
-  "image_size": [64, 64],
-  "color": "grey"
+  "num_shapes": 2,
+  "output_dir": "./output",
+  "output_prefix": "TestData-JC-July24_",
+  "output_type": "png",
+  "output_digit": 4,
+  "image_width": 64,
+  "image_height": 64,
+  "color_type": "grey",
+  "background": "white",
+  "color_background": 10,
+  "shape_overlapping": false,
+  "shape_cropping": false
 }
