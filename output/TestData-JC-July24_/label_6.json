@@ -1,0 +1,16 @@
+[
+  {
+    "shape": "triangle",
+    "scale": 0.4068,
+    "pos_x": 0.4367,
+    "pos_y": 0.2836,
+    "rotation": 132
+  },
+  {
+    "shape": "square",
+    "scale": 0.5968,
+    "pos_x": 0.7425,
+    "pos_y": 0.7175,
+    "rotation": 30
+  }
+]
