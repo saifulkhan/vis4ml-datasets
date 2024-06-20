@@ -5,7 +5,7 @@
 
 `distribution.json`
 
-```json
+```
 {
   /* "valid shapes: circle, square, triangle, <to add>" */
   "shape": ["circle", "square", "triangle"],
@@ -41,7 +41,7 @@
 
 `metadata.json`
 
-```json
+```
 {
   /* number of images: integer > 0  */
   "num_images": 10,
