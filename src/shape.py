@@ -27,7 +27,7 @@ def square(image_size, scale, orientation, position_scale):
     y_scale = position_scale[1]
 
     # calculate the half-length of the side
-    side = int(scale * min(image_size) / 2)
+    side = int(scale * min(image_size))
     start_x = int(x_scale * image_size[1] - side / 2)
     start_y = int(y_scale * image_size[0] - side / 2)
     end_x = start_x + side
@@ -50,7 +50,7 @@ def triangle(image_size, scale, orientation, position_scale):
     y_scale = position_scale[1]
 
     # calculate the half-length of the side of the triangle
-    side = int(scale * min(image_size) / 2)
+    side = int(scale * min(image_size))
     half_side = side // 2
     start_x = int(x_scale * image_size[1])
     start_y = int(y_scale * image_size[0])

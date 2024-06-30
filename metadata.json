@@ -1,6 +1,6 @@
 {
   "num_images": 10,
-  "num_shapes": 2,
+  "num_shapes": 3,
   "output_dir": "./output",
   "output_prefix": "TestData-JC-July24_",
   "output_type": "png",
@@ -10,6 +10,6 @@
   "color_type": "grey",
   "background": "white",
   "color_background": 10,
-  "shape_overlapping": false,
-  "shape_cropping": false
+  "shape_cropping": true,
+  "shape_overlapping": false
 }
