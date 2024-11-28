@@ -93,6 +93,9 @@
 ## Run Image Generator
 
 ```python
-python main.py
+python main.py <metadata.json path> <distribution.json path>
+
+# e.g.,
+python main.py metadata.json distribution.json
 ```
  
